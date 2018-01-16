@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class SceneMainManager : MonoBehaviour {
 	[Header("Reference Attributes")]
 	public GameObject prefabBounceObject;
+	public PlayerControl playerControl;
 
 	[Header("UI Attributes")]
 	public Text textCountdown;
@@ -22,25 +23,34 @@ public class SceneMainManager : MonoBehaviour {
 	[Header("Vairable Attributes")]
 	public float startingLife = 3f;
 
-	public float objectSpawnInterval = 10f;
+	public float objectSpawnInterval;
 	public float[] spawnPosY;
 
 	[Header("DO NOT MODIFY")]
 	public List<GameObject> spawnedObjects;
 	public List<GameObject> heartObjects;
 
-	bool spawning = false;
+	public bool spawning = false;
 	float t;
 	int score = 0;
 	int totalObject;
+
+	float tempInitialInterval;
 
 	public void RestartGame(){
 		StartCoroutine(Start());
 	}
 
+	void Awake()
+	{
+		tempInitialInterval = objectSpawnInterval;
+	}
+
 	//START
 	IEnumerator Start()
 	{
+		playerControl.Init();
+		objectSpawnInterval = tempInitialInterval;
 		panelGameOver.SetActive(false);
 		InitLife();
 		SetScore(0);
@@ -99,7 +109,7 @@ public class SceneMainManager : MonoBehaviour {
 			t -= Time.deltaTime;
 			if(t <= 0f){
 				SpawnObject();
-				t = objectSpawnInterval;
+				t = objectSpawnInterval + UnityEngine.Random.Range(-0.5f,0.5f);
 			}
 		}
 	}
@@ -137,7 +147,7 @@ public class SceneMainManager : MonoBehaviour {
 	{
 		if(totalObject % 5 == 0){
 			if(objectSpawnInterval > 3f){
-				objectSpawnInterval -= 0.8f;
+				objectSpawnInterval -= UnityEngine.Random.Range(0.5f,1f);
 			}
 		}
 	}
@@ -180,7 +190,10 @@ public class SceneMainManager : MonoBehaviour {
 		}
 		spawnedObjects.Clear();
 
+		playerControl.InitControlButton();
+
 		panelGameOver.SetActive(true);
+
 		textTotalScore.text = this.score.ToString();
 	}
 }
