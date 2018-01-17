@@ -95,7 +95,7 @@ public class PlayerControl : MonoBehaviour {
 	float tRelease;
 	void Update()
 	{
-		if(sceneManager.spawning){
+//		if(sceneManager.spawning){
 			if(controlType != PLAYER_CONTROL.CursorFollow){
 				if(flagLeft){
 //					if(bouncer.transform.localPosition.x <= bouncerXPos[0]){
@@ -171,7 +171,7 @@ public class PlayerControl : MonoBehaviour {
 					}
 				}	
 			}
-		}
+//		}
 	}
 
 	public void OnSelectControl(int value)

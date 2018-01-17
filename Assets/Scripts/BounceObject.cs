@@ -41,11 +41,11 @@ public class BounceObject : MonoBehaviour {
 //			Bounce();
 //		}
 	}
-
+	float[] ran = new float[]{6.5f,7f};
 	void Bounce()
 	{
 		//thisRigidBody.AddRelativeForce(new Vector2( Random.Range(moveBounceThrust,moveBounceThrust*2),Random.Range(bounceThrustLow,bounceThrusHigh)));
-		thisRigidBody.velocity = new Vector2(Random.Range(1f,1.5f),7f);
+		thisRigidBody.velocity = new Vector2(Random.Range(1f,1.75f),7f);
 		if(OnBounce != null) OnBounce();
 	}
 
