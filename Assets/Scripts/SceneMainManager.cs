@@ -8,6 +8,7 @@ public class SceneMainManager : MonoBehaviour {
 	[Header("Reference Attributes")]
 	public GameObject prefabBounceObject;
 	public PlayerControl playerControl;
+	public SpawnFlag spawnFlag;
 
 	[Header("UI Attributes")]
 	public Text textCountdown;
@@ -106,11 +107,14 @@ public class SceneMainManager : MonoBehaviour {
 	void ValidateSpawning()
 	{
 		if(spawning){
-			t -= Time.deltaTime;
 			if(t <= 0f){
-				SpawnObject();
-				t = objectSpawnInterval + UnityEngine.Random.Range(-0.5f,0.5f);
+				if(!spawnFlag.flag){
+					SpawnObject();
+				}
+			}else{
+				t -= Time.deltaTime;
 			}
+
 		}
 	}
 
@@ -121,7 +125,6 @@ public class SceneMainManager : MonoBehaviour {
 		int rnd = 0;
 
 		float yPos = spawnPosY[rnd];
-
 
 		GameObject tempBounceObject = Instantiate(prefabBounceObject,new Vector3(-8.5f,yPos,0f),Quaternion.identity);
 		BounceObject bounceObject = tempBounceObject.GetComponent<BounceObject>();
@@ -134,6 +137,8 @@ public class SceneMainManager : MonoBehaviour {
 
 		totalObject++;
 		ValidateSpawnInterval();
+
+		t = objectSpawnInterval + UnityEngine.Random.Range(-0.5f,0.5f);
 	}
 
 	void BounceObjectOnFinish (BounceObject g)

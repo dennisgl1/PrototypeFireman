@@ -13,11 +13,12 @@ public class PlayerControl : MonoBehaviour {
 	public PLAYER_CONTROL controlType = PLAYER_CONTROL.Snap;
 	public SceneMainManager sceneManager;
 	public GameObject bouncer;
-
 	public GameObject inputButton;
+	public Transform destinationL, destinationR;
 
 	public float[] bouncerXPos;
 	public float moveSpeed;
+	public float lerpSpeed;
 	public bool flagSnap = true;
 	public int currentBouncerIndex = 0;
 
@@ -48,12 +49,13 @@ public class PlayerControl : MonoBehaviour {
 		}else if(controlType == PLAYER_CONTROL.Free){
 			releaseLeft = false;
 			releaseRight = false;
-
+			tHold = 0f;
 			if(!flagRight){
 				flagLeft = true;
 			}
 		}
 	}
+
 	public void ButtonRDown()
 	{
 		if(controlType == PLAYER_CONTROL.Snap){
@@ -63,7 +65,7 @@ public class PlayerControl : MonoBehaviour {
 		}else if(controlType == PLAYER_CONTROL.Free){
 			releaseLeft = false;
 			releaseRight = false;
-
+			tHold = 0f;
 			if(!flagLeft){
 				flagRight = true;
 			}
@@ -74,7 +76,7 @@ public class PlayerControl : MonoBehaviour {
 	{
 		if(flagLeft){
 			flagLeft = false;
-			releaseLeft = true;
+//			releaseLeft = true;
 			tRelease = moveSpeed;
 		}
 
@@ -84,60 +86,80 @@ public class PlayerControl : MonoBehaviour {
 	{
 		if(flagRight){
 			flagRight = false;
-			releaseRight = true;
+//			releaseRight = true;
 			tRelease = moveSpeed;
 		}
 	}
 
+	float tHold;
 	float tRelease;
 	void Update()
 	{
 		if(sceneManager.spawning){
 			if(controlType != PLAYER_CONTROL.CursorFollow){
 				if(flagLeft){
-					if(bouncer.transform.localPosition.x <= bouncerXPos[0]){
+//					if(bouncer.transform.localPosition.x <= bouncerXPos[0]){
+//						bouncer.transform.localPosition = new Vector3(bouncerXPos[0],bouncer.transform.localPosition.y);
+//						flagLeft = false;
+//
+//					}else{
+//						bouncer.transform.Translate(Vector3.left*moveSpeed);
+//					}
+					if(bouncer.transform.localPosition.x <= bouncerXPos[0] || tHold >= 1f){
 						bouncer.transform.localPosition = new Vector3(bouncerXPos[0],bouncer.transform.localPosition.y);
 						flagLeft = false;
+						tHold = 0;
 					}else{
-						bouncer.transform.Translate(Vector3.left*moveSpeed);
+						tHold += Time.deltaTime * lerpSpeed;
+						bouncer.transform.localPosition = Vector3.Lerp(bouncer.transform.localPosition,destinationL.localPosition,tHold);
 					}
+
 
 				}else if(flagRight){
-					if(bouncer.transform.localPosition.x >= bouncerXPos[bouncerXPos.Length-1]){
-						bouncer.transform.localPosition = new Vector3(bouncerXPos[bouncerXPos.Length-1],bouncer.transform.localPosition.y);
-						flagRight = false;
-					}
-					else{
-						bouncer.transform.Translate(Vector3.right*moveSpeed);
-					}			
-				}else if(releaseLeft){
-					if(bouncer.transform.localPosition.x <= bouncerXPos[0]){
-						bouncer.transform.localPosition = new Vector3(bouncerXPos[0],bouncer.transform.localPosition.y);
-						releaseLeft = false;
-					}else{
-						if(tRelease <= 0){
-							tRelease = 0;
-							releaseLeft = false;
-						}else{
-							tRelease -= Time.deltaTime*2;
-							bouncer.transform.Translate(Vector3.left*tRelease);
-						}
+//					if(bouncer.transform.localPosition.x >= bouncerXPos[bouncerXPos.Length-1]){
+//						bouncer.transform.localPosition = new Vector3(bouncerXPos[bouncerXPos.Length-1],bouncer.transform.localPosition.y);
+//						flagRight = false;
+//					}
+//					else{
+//						bouncer.transform.Translate(Vector3.right*moveSpeed);
+//					}	
 
+					if(bouncer.transform.localPosition.x >= bouncerXPos[bouncerXPos.Length-1] || tHold >= 1f){
+						bouncer.transform.localPosition = new Vector3(bouncerXPos[0],bouncer.transform.localPosition.y);
+						flagRight = false;
+						tHold = 0;
+					}else{
+						tHold += Time.deltaTime * lerpSpeed;
+						bouncer.transform.localPosition = Vector3.Lerp(bouncer.transform.localPosition,destinationR.localPosition,tHold);
 					}
+				}else if(releaseLeft){
+//					if(bouncer.transform.localPosition.x <= bouncerXPos[0]){
+//						bouncer.transform.localPosition = new Vector3(bouncerXPos[0],bouncer.transform.localPosition.y);
+//						releaseLeft = false;
+//					}else{
+//						if(tRelease <= 0){
+//							tRelease = 0;
+//							releaseLeft = false;
+//						}else{
+//							tRelease -= Time.deltaTime*2;
+//							bouncer.transform.Translate(Vector3.left*tRelease);
+//						}
+//
+//					}
 				}else if(releaseRight){
-					if(bouncer.transform.localPosition.x >= bouncerXPos[bouncerXPos.Length-1]){
-						bouncer.transform.localPosition = new Vector3(bouncerXPos[bouncerXPos.Length-1],bouncer.transform.localPosition.y);
-						releaseRight = false;
-					}
-					else{
-						if(tRelease <= 0){
-							tRelease = 0;
-							releaseRight = false;
-						}else{
-							tRelease -= Time.deltaTime*2;
-							bouncer.transform.Translate(Vector3.right*tRelease);
-						}
-					}	
+//					if(bouncer.transform.localPosition.x >= bouncerXPos[bouncerXPos.Length-1]){
+//						bouncer.transform.localPosition = new Vector3(bouncerXPos[bouncerXPos.Length-1],bouncer.transform.localPosition.y);
+//						releaseRight = false;
+//					}
+//					else{
+//						if(tRelease <= 0){
+//							tRelease = 0;
+//							releaseRight = false;
+//						}else{
+//							tRelease -= Time.deltaTime*2;
+//							bouncer.transform.Translate(Vector3.right*tRelease);
+//						}
+//					}	
 				}
 			}else{
 				if(Input.GetMouseButton(0)){

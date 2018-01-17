@@ -11,16 +11,16 @@ public class BounceObject : MonoBehaviour {
 
 	[Header("Attributes")]
 	public Rigidbody2D thisRigidBody;
-	public float[] initialMoveThrust;
-	public float moveBounceThrust;
-	public float bounceThrust = 250f;
 	
 	int currentIndex;
+
+	public Vector2 currentVelocity;
 
 	public void Init(int index)
 	{
 		currentIndex = index;
-		thisRigidBody.AddRelativeForce(Vector2.right*initialMoveThrust[index]);
+
+		thisRigidBody.velocity = new Vector2(2f,0f);
 	}
 
 	void OnCollisionEnter2D(Collision2D other)
@@ -37,18 +37,25 @@ public class BounceObject : MonoBehaviour {
 		if(other.tag == "Finish"){
 			if(OnFinish != null) OnFinish(this);
 			Destroy(gameObject);
-		}
+		}//else if(other.tag == "Bouncer"){
+//			Bounce();
+//		}
 	}
 
 	void Bounce()
 	{
-		thisRigidBody.AddRelativeForce(new Vector2(moveBounceThrust,bounceThrust));
-		
+		//thisRigidBody.AddRelativeForce(new Vector2( Random.Range(moveBounceThrust,moveBounceThrust*2),Random.Range(bounceThrustLow,bounceThrusHigh)));
+		thisRigidBody.velocity = new Vector2(Random.Range(1f,1.5f),7f);
 		if(OnBounce != null) OnBounce();
 	}
 
 	void Fall()
 	{
 		if(OnFall != null) OnFall(this);
+	}
+
+	void Update()
+	{
+		currentVelocity = thisRigidBody.velocity;
 	}
 }
