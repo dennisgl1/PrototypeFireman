@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class PanelGameOver : MonoBehaviour {
 	public PlayerControl playerControl;
+	public HUD hud;
 
 	public Button buttonSnap;
 	public Button buttonFree;
@@ -15,6 +16,7 @@ public class PanelGameOver : MonoBehaviour {
 	public void Show()
 	{
 		InitControlButton();
+		textScore.text = hud.GetScore().ToString();
 		gameObject.SetActive(true);
 	}
 
