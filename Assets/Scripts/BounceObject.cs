@@ -48,7 +48,8 @@ public class BounceObject : MonoBehaviour {
 	void Bounce()
 	{
 		//thisRigidBody.AddRelativeForce(new Vector2( Random.Range(moveBounceThrust,moveBounceThrust*2),Random.Range(bounceThrustLow,bounceThrusHigh)));
-		thisRigidBody.velocity = new Vector2(Random.Range(1f,1.75f),7f);
+		float bounceValue = PlayerControl.Instance.controlType == PLAYER_CONTROL.Snap ? 1.2f : Random.Range(1f,2f);
+		thisRigidBody.velocity = new Vector2(bounceValue,Random.Range(6.5f,7f));
 		if(OnBounce != null) OnBounce();
 	}
 

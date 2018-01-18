@@ -10,8 +10,11 @@ public enum PLAYER_CONTROL{
 }
 
 public class PlayerControl : MonoBehaviour {
+	public static PlayerControl Instance;
+
 	public PLAYER_CONTROL controlType = PLAYER_CONTROL.Snap;
 	public SceneMainManager sceneManager;
+	public SpawnPointParent spawnPointParent;
 	public GameObject bouncer;
 	public GameObject inputButton;
 	public Transform destinationL, destinationR;
@@ -26,6 +29,11 @@ public class PlayerControl : MonoBehaviour {
 
 	public bool releaseLeft = false;
 	public bool releaseRight = false;
+
+	void Awake()
+	{
+		Instance = this;
+	}
 
 	public void Init()
 	{
@@ -96,70 +104,73 @@ public class PlayerControl : MonoBehaviour {
 	{
 //		if(sceneManager.spawning){
 			if(controlType != PLAYER_CONTROL.CursorFollow){
-				if(flagLeft){
-//					if(bouncer.transform.localPosition.x <= bouncerXPos[0]){
-//						bouncer.transform.localPosition = new Vector3(bouncerXPos[0],bouncer.transform.localPosition.y);
-//						flagLeft = false;
-//
-//					}else{
-//						bouncer.transform.Translate(Vector3.left*moveSpeed);
-//					}
-					if(bouncer.transform.localPosition.x <= bouncerXPos[0] || tHold >= 1f){
-						bouncer.transform.localPosition = new Vector3(bouncerXPos[0],bouncer.transform.localPosition.y);
-						flagLeft = false;
-						tHold = 0;
-					}else{
-						tHold += Time.deltaTime * lerpSpeed;
-						bouncer.transform.localPosition = Vector3.Lerp(bouncer.transform.localPosition,destinationL.localPosition,tHold);
+				if(spawnPointParent.flagSpawning){
+					if(flagLeft){
+						//					if(bouncer.transform.localPosition.x <= bouncerXPos[0]){
+						//						bouncer.transform.localPosition = new Vector3(bouncerXPos[0],bouncer.transform.localPosition.y);
+						//						flagLeft = false;
+						//
+						//					}else{
+						//						bouncer.transform.Translate(Vector3.left*moveSpeed);
+						//					}
+						if(bouncer.transform.localPosition.x <= bouncerXPos[0] || tHold >= 1f){
+							bouncer.transform.localPosition = new Vector3(bouncerXPos[0],bouncer.transform.localPosition.y);
+							flagLeft = false;
+							tHold = 0;
+						}else{
+							tHold += Time.deltaTime * lerpSpeed;
+							bouncer.transform.localPosition = Vector3.Lerp(bouncer.transform.localPosition,destinationL.localPosition,tHold);
+						}
+
+
+					}else if(flagRight){
+						//					if(bouncer.transform.localPosition.x >= bouncerXPos[bouncerXPos.Length-1]){
+						//						bouncer.transform.localPosition = new Vector3(bouncerXPos[bouncerXPos.Length-1],bouncer.transform.localPosition.y);
+						//						flagRight = false;
+						//					}
+						//					else{
+						//						bouncer.transform.Translate(Vector3.right*moveSpeed);
+						//					}	
+
+						if(bouncer.transform.localPosition.x >= bouncerXPos[bouncerXPos.Length-1] || tHold >= 1f){
+							bouncer.transform.localPosition = new Vector3(bouncerXPos[0],bouncer.transform.localPosition.y);
+							flagRight = false;
+							tHold = 0;
+						}else{
+							tHold += Time.deltaTime * lerpSpeed;
+							bouncer.transform.localPosition = Vector3.Lerp(bouncer.transform.localPosition,destinationR.localPosition,tHold);
+						}
+					}else if(releaseLeft){
+						//					if(bouncer.transform.localPosition.x <= bouncerXPos[0]){
+						//						bouncer.transform.localPosition = new Vector3(bouncerXPos[0],bouncer.transform.localPosition.y);
+						//						releaseLeft = false;
+						//					}else{
+						//						if(tRelease <= 0){
+						//							tRelease = 0;
+						//							releaseLeft = false;
+						//						}else{
+						//							tRelease -= Time.deltaTime*2;
+						//							bouncer.transform.Translate(Vector3.left*tRelease);
+						//						}
+						//
+						//					}
+					}else if(releaseRight){
+						//					if(bouncer.transform.localPosition.x >= bouncerXPos[bouncerXPos.Length-1]){
+						//						bouncer.transform.localPosition = new Vector3(bouncerXPos[bouncerXPos.Length-1],bouncer.transform.localPosition.y);
+						//						releaseRight = false;
+						//					}
+						//					else{
+						//						if(tRelease <= 0){
+						//							tRelease = 0;
+						//							releaseRight = false;
+						//						}else{
+						//							tRelease -= Time.deltaTime*2;
+						//							bouncer.transform.Translate(Vector3.right*tRelease);
+						//						}
+						//					}	
 					}
-
-
-				}else if(flagRight){
-//					if(bouncer.transform.localPosition.x >= bouncerXPos[bouncerXPos.Length-1]){
-//						bouncer.transform.localPosition = new Vector3(bouncerXPos[bouncerXPos.Length-1],bouncer.transform.localPosition.y);
-//						flagRight = false;
-//					}
-//					else{
-//						bouncer.transform.Translate(Vector3.right*moveSpeed);
-//					}	
-
-					if(bouncer.transform.localPosition.x >= bouncerXPos[bouncerXPos.Length-1] || tHold >= 1f){
-						bouncer.transform.localPosition = new Vector3(bouncerXPos[0],bouncer.transform.localPosition.y);
-						flagRight = false;
-						tHold = 0;
-					}else{
-						tHold += Time.deltaTime * lerpSpeed;
-						bouncer.transform.localPosition = Vector3.Lerp(bouncer.transform.localPosition,destinationR.localPosition,tHold);
-					}
-				}else if(releaseLeft){
-//					if(bouncer.transform.localPosition.x <= bouncerXPos[0]){
-//						bouncer.transform.localPosition = new Vector3(bouncerXPos[0],bouncer.transform.localPosition.y);
-//						releaseLeft = false;
-//					}else{
-//						if(tRelease <= 0){
-//							tRelease = 0;
-//							releaseLeft = false;
-//						}else{
-//							tRelease -= Time.deltaTime*2;
-//							bouncer.transform.Translate(Vector3.left*tRelease);
-//						}
-//
-//					}
-				}else if(releaseRight){
-//					if(bouncer.transform.localPosition.x >= bouncerXPos[bouncerXPos.Length-1]){
-//						bouncer.transform.localPosition = new Vector3(bouncerXPos[bouncerXPos.Length-1],bouncer.transform.localPosition.y);
-//						releaseRight = false;
-//					}
-//					else{
-//						if(tRelease <= 0){
-//							tRelease = 0;
-//							releaseRight = false;
-//						}else{
-//							tRelease -= Time.deltaTime*2;
-//							bouncer.transform.Translate(Vector3.right*tRelease);
-//						}
-//					}	
 				}
+				
 			}else{
 				if(Input.GetMouseButton(0)){
 					Vector3 mousePosition = Input.mousePosition;

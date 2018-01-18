@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class PanelGameOver : MonoBehaviour {
+
 	public PlayerControl playerControl;
 	public HUD hud;
 
