@@ -3,20 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Road : MonoBehaviour {
-	public RoadController parent;
 	public float speed = 0.2f;
+	public bool flagMoving = true;
 
-	void OnTriggerEnter2D(Collider2D other)
+	void FixedUpdate()
 	{
-		if(other.tag == "RoadSpawn") parent.SpawnRoad();
-	}
-
-	void Update()
-	{
-		if(transform.position.x >= -20f){
-			transform.Translate(Vector3.left*speed);
-		}else{
-			Destroy(gameObject);
+		if(flagMoving){
+			if(transform.position.x >= -30f){
+				transform.Translate(Vector3.left*speed);
+			}else{
+				transform.localPosition = new Vector3(30f,0,0);
+			}
 		}
 	}
 }

@@ -37,9 +37,9 @@ public class BounceObject : MonoBehaviour {
 		if(other.tag == "Finish"){
 			if(OnFinish != null) OnFinish(this);
 			Destroy(gameObject);
-		}//else if(other.tag == "Bouncer"){
-//			Bounce();
-//		}
+		}else if(other.gameObject.tag == "Floor"){
+			Fall();
+		}
 	}
 	float[] ran = new float[]{6.5f,7f};
 	void Bounce()

@@ -19,7 +19,6 @@ public class PlayerControl : MonoBehaviour {
 	public float[] bouncerXPos;
 	public float moveSpeed;
 	public float lerpSpeed;
-	public bool flagSnap = true;
 	public int currentBouncerIndex = 0;
 
 	public bool flagLeft = false;
