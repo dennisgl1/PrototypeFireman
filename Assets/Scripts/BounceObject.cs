@@ -11,7 +11,8 @@ public class BounceObject : MonoBehaviour {
 
 	[Header("Attributes")]
 	public Rigidbody2D thisRigidBody;
-	
+	public Collider2D thisCollider;
+
 	int currentIndex;
 
 	public Vector2 currentVelocity;
@@ -29,6 +30,8 @@ public class BounceObject : MonoBehaviour {
 			Bounce();
 		}else if(other.gameObject.tag == "Floor"){
 			Fall();
+		}else if(other.gameObject.tag == "BounceObject"){
+			Physics2D.IgnoreCollision(other.gameObject.GetComponent<BounceObject>().thisCollider,thisCollider);
 		}
 	}
 

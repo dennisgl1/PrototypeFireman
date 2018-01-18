@@ -9,6 +9,8 @@ public class SpawnPointParent : MonoBehaviour {
 
 	public bool flagSpawning = false;
 
+	public List<GameObject> spawnPoints;
+
 	int totalSpawn = 0;
 
 	public float t = 0;
@@ -19,6 +21,14 @@ public class SpawnPointParent : MonoBehaviour {
 		totalSpawn = 0;
 		spawnInterval = initialSpawnInterval;
 		t = 0;
+	}
+
+	public void Stop()
+	{
+		flagSpawning = false;
+		foreach(GameObject g in spawnPoints){
+			Destroy(g);
+		}
 	}
 
 	void Update()
@@ -38,6 +48,9 @@ public class SpawnPointParent : MonoBehaviour {
 		GameObject temp = (GameObject) Instantiate(prefabSpawnPoint,transform);
 		SpawnPoint sp = temp.GetComponent<SpawnPoint>();
 		sp.bounceObjectParent = bounceObjectParent;
+
+		spawnPoints.Add(temp);
+
 		ValidateSpawnInterval();
 	}
 

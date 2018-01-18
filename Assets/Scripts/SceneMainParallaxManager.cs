@@ -46,7 +46,7 @@ public class SceneMainParallaxManager : MonoBehaviour {
 
 	void GameOver()
 	{
-		spawnPointParent.flagSpawning = false;
+		spawnPointParent.Stop();
 		bounceObjectParent.DestroyObjects();
 		StopEnvironment();
 		panelGameOver.Show();
