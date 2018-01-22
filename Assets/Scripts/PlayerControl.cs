@@ -33,6 +33,7 @@ public class PlayerControl : MonoBehaviour {
 
 	public GameObject buttonSnap;
 	public GameObject buttonFastSnap;
+	public GameObject fastSnapGuide;
 
 	public Button buttonSnaps, buttonFree, buttonCursorFollow, buttonFastSnaps;
 
@@ -55,20 +56,23 @@ public class PlayerControl : MonoBehaviour {
 		case PLAYER_CONTROL.Snap: 
 			buttonSnap.SetActive(true);
 			buttonFastSnap.SetActive(false);
-
+			fastSnapGuide.SetActive(false);
 			buttonTouchSnap(0);
 			break;
 		case PLAYER_CONTROL.Free:
 			buttonSnap.SetActive(true);
 			buttonFastSnap.SetActive(false);
+			fastSnapGuide.SetActive(false);
 			break;
 		case PLAYER_CONTROL.CursorFollow: 
 			buttonSnap.SetActive(false);
 			buttonFastSnap.SetActive(false);
+			fastSnapGuide.SetActive(false);
 			break;
 		case PLAYER_CONTROL.FastSnap: 
 			buttonSnap.SetActive(false);
 			buttonFastSnap.SetActive(true);
+			fastSnapGuide.SetActive(true);
 
 			buttonTouchSnap(0);
 			break;
