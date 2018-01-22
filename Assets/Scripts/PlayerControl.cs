@@ -6,7 +6,8 @@ using UnityEngine.UI;
 public enum PLAYER_CONTROL{
 	Snap,
 	Free,
-	CursorFollow
+	CursorFollow,
+	FastSnap
 }
 
 public class PlayerControl : MonoBehaviour {
@@ -16,7 +17,7 @@ public class PlayerControl : MonoBehaviour {
 	public SceneMainManager sceneManager;
 	public SpawnPointParent spawnPointParent;
 	public GameObject bouncer;
-	public GameObject inputButton;
+
 	public Transform destinationL, destinationR;
 
 	public float[] bouncerXPos;
@@ -30,6 +31,11 @@ public class PlayerControl : MonoBehaviour {
 	public bool releaseLeft = false;
 	public bool releaseRight = false;
 
+	public GameObject buttonSnap;
+	public GameObject buttonFastSnap;
+
+	public Button buttonSnaps, buttonFree, buttonCursorFollow, buttonFastSnaps;
+
 	void Awake()
 	{
 		Instance = this;
@@ -40,11 +46,40 @@ public class PlayerControl : MonoBehaviour {
 		bouncer.transform.localPosition = new Vector3(bouncerXPos[0],bouncer.transform.localPosition.y);
 		currentBouncerIndex = 0;
 
-		if(controlType == PLAYER_CONTROL.CursorFollow){
-			inputButton.SetActive(false);
-		}else{
-			inputButton.SetActive(true);
-		}	
+		SetControlType((int)controlType);
+	}
+
+	public void SetControlType(int controlTypeIndex)
+	{
+		switch((PLAYER_CONTROL)controlTypeIndex){
+		case PLAYER_CONTROL.Snap: 
+			buttonSnap.SetActive(true);
+			buttonFastSnap.SetActive(false);
+
+			buttonTouchSnap(0);
+			break;
+		case PLAYER_CONTROL.Free:
+			buttonSnap.SetActive(true);
+			buttonFastSnap.SetActive(false);
+			break;
+		case PLAYER_CONTROL.CursorFollow: 
+			buttonSnap.SetActive(false);
+			buttonFastSnap.SetActive(false);
+			break;
+		case PLAYER_CONTROL.FastSnap: 
+			buttonSnap.SetActive(false);
+			buttonFastSnap.SetActive(true);
+
+			buttonTouchSnap(0);
+			break;
+		}
+
+		buttonSnaps.interactable = (PLAYER_CONTROL)controlTypeIndex == PLAYER_CONTROL.Snap ? false : true;
+		buttonFree.interactable = (PLAYER_CONTROL)controlTypeIndex == PLAYER_CONTROL.Free ? false : true;
+		buttonCursorFollow.interactable = (PLAYER_CONTROL)controlTypeIndex == PLAYER_CONTROL.CursorFollow ? false : true;
+		buttonFastSnaps.interactable = (PLAYER_CONTROL)controlTypeIndex == PLAYER_CONTROL.FastSnap ? false : true;
+
+		controlType = (PLAYER_CONTROL)controlTypeIndex;
 	}
 
 	public void buttonTouchSnap(int index)
@@ -110,7 +145,7 @@ public class PlayerControl : MonoBehaviour {
 	{
 //		if(sceneManager.spawning){
 			if(controlType != PLAYER_CONTROL.CursorFollow){
-				if(spawnPointParent.flagSpawning){
+//				if(spawnPointParent.flagSpawning){
 					if(flagLeft){
 						//					if(bouncer.transform.localPosition.x <= bouncerXPos[0]){
 						//						bouncer.transform.localPosition = new Vector3(bouncerXPos[0],bouncer.transform.localPosition.y);
@@ -119,11 +154,14 @@ public class PlayerControl : MonoBehaviour {
 						//					}else{
 						//						bouncer.transform.Translate(Vector3.left*moveSpeed);
 						//					}
+//						print("tHold = "+tHold+", bouncer.transform.localposition.x = "+bouncer.transform.localPosition.x);	
 						if(bouncer.transform.localPosition.x <= bouncerXPos[0] || tHold >= 1f){
+//							print("A");	
 							bouncer.transform.localPosition = new Vector3(bouncerXPos[0],bouncer.transform.localPosition.y);
 							flagLeft = false;
 							tHold = 0;
 						}else{
+//							print("B");
 							tHold += Time.deltaTime * lerpSpeed;
 							bouncer.transform.localPosition = Vector3.Lerp(bouncer.transform.localPosition,destinationL.localPosition,tHold);
 						}
@@ -137,12 +175,14 @@ public class PlayerControl : MonoBehaviour {
 						//					else{
 						//						bouncer.transform.Translate(Vector3.right*moveSpeed);
 						//					}	
-
+//						print("tHold = "+tHold+", bouncer.transform.localposition.x = "+bouncer.transform.localPosition.x);
 						if(bouncer.transform.localPosition.x >= bouncerXPos[bouncerXPos.Length-1] || tHold >= 1f){
+//							print("C");	
 							bouncer.transform.localPosition = new Vector3(bouncerXPos[0],bouncer.transform.localPosition.y);
 							flagRight = false;
 							tHold = 0;
 						}else{
+//							print("D");
 							tHold += Time.deltaTime * lerpSpeed;
 							bouncer.transform.localPosition = Vector3.Lerp(bouncer.transform.localPosition,destinationR.localPosition,tHold);
 						}
@@ -175,7 +215,7 @@ public class PlayerControl : MonoBehaviour {
 						//						}
 						//					}	
 					}
-				}
+//				}
 				
 			}else{
 				if(Input.GetMouseButton(0)){
@@ -195,11 +235,11 @@ public class PlayerControl : MonoBehaviour {
 		controlType = (PLAYER_CONTROL)value;
 	}
 
-	public Button buttonSnap, buttonFree, buttonCursorFollow;
+
 
 	public void InitControlButton()
 	{
-		buttonSnap.interactable = controlType == PLAYER_CONTROL.Snap ? false : true;
+		buttonSnaps.interactable = controlType == PLAYER_CONTROL.Snap ? false : true;
 		buttonFree.interactable = controlType == PLAYER_CONTROL.Free ? false : true;
 		buttonCursorFollow.interactable = controlType == PLAYER_CONTROL.CursorFollow ? false : true;
 	}
@@ -207,7 +247,7 @@ public class PlayerControl : MonoBehaviour {
 	public void OnSelectSnap()
 	{
 		controlType = PLAYER_CONTROL.Snap;
-		buttonSnap.interactable = false;
+		buttonSnaps.interactable = false;
 		buttonFree.interactable = true;
 		buttonCursorFollow.interactable = true;
 	}
@@ -215,7 +255,7 @@ public class PlayerControl : MonoBehaviour {
 	public void OnSelectFree()
 	{
 		controlType = PLAYER_CONTROL.Free;
-		buttonSnap.interactable = true;
+		buttonSnaps.interactable = true;
 		buttonFree.interactable = false;
 		buttonCursorFollow.interactable = true;
 	}
@@ -223,7 +263,7 @@ public class PlayerControl : MonoBehaviour {
 	public void OnSelectFollwoCursor()
 	{
 		controlType = PLAYER_CONTROL.CursorFollow;
-		buttonSnap.interactable = true;
+		buttonSnaps.interactable = true;
 		buttonFree.interactable = true;
 		buttonCursorFollow.interactable = false;
 	}
