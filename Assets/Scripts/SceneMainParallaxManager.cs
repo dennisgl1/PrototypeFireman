@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SceneMainParallaxManager : MonoBehaviour {
 	public PanelCountdown panelCountdown;
@@ -22,8 +23,10 @@ public class SceneMainParallaxManager : MonoBehaviour {
 		InitEnvironment();
 		spawnPointParent.Init();
 
-		panelCountdown.OnGo += OnGo;
-		panelCountdown.Init();
+		if(SceneManager.GetActiveScene().name != "Simulation"){
+			panelCountdown.OnGo += OnGo;
+			panelCountdown.Init();
+		}
 	}
 
 	public void Reset()
