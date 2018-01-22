@@ -47,6 +47,12 @@ public class PlayerControl : MonoBehaviour {
 		}	
 	}
 
+	public void buttonTouchSnap(int index)
+	{
+		bouncer.transform.localPosition = new Vector3(bouncerXPos[index],bouncer.transform.localPosition.y);
+		currentBouncerIndex = index;
+	}
+
 	public void ButtonLDown()
 	{
 		if(controlType == PLAYER_CONTROL.Snap){

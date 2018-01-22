@@ -28,6 +28,8 @@ public class NewBounceObject : MonoBehaviour {
 	{
 		thisRigidbody.velocity = BounceVelocity[totalBounce];
 		totalBounce++;
+		if(totalBounce >= BounceVelocity.Length) totalBounce = BounceVelocity.Length-1;
+
 	}
 	void Finish()
 	{
@@ -37,5 +39,4 @@ public class NewBounceObject : MonoBehaviour {
 	{
 		Destroy(gameObject);
 	}
-
 }
