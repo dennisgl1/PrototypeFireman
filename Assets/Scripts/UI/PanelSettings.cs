@@ -41,9 +41,11 @@ public class PanelSettings : MonoBehaviour {
 	public void ButtonResetDefaultOnClick()
 	{
 		for(int i = 0;i<totalObjects;i++){
+			Vector2[] tempDefaultValue = i == 0 ? bounceInputDefaultValueA : i == 1 ? bounceInputDefaultValueB : bounceInputDefaultValueC;
+
 			for(int j = 0;j<totalBounceInput;j++){
-				SetData(i,j,AXIS.X,bounceInputDefaultValueA[j].x);
-				SetData(i,j,AXIS.Y,bounceInputDefaultValueA[j].y);
+				SetData(i,j,AXIS.X,tempDefaultValue[j].x);
+				SetData(i,j,AXIS.Y,tempDefaultValue[j].y);
 			}
 		}
 		LoadInputData();
@@ -79,9 +81,11 @@ public class PanelSettings : MonoBehaviour {
 		for(int i = 0;i<totalBounceInput;i++){
 			string tempPrefKey = GetPrefKeyID(index,i,AXIS.X);
 			PlayerPrefs.SetFloat(tempPrefKey,float.Parse(tempInputFieldX[i].text));
+			bounceObjects[index].BounceVelocity[i].x = float.Parse(tempInputFieldX[i].text);
 
 			tempPrefKey = GetPrefKeyID(index,i,AXIS.Y);
 			PlayerPrefs.SetFloat(tempPrefKey,float.Parse(tempInputFieldY[i].text));
+			bounceObjects[index].BounceVelocity[i].y = float.Parse(tempInputFieldY[i].text);
 		}
 	}
 
@@ -91,16 +95,19 @@ public class PanelSettings : MonoBehaviour {
 			InputField[] tempInputFieldX = i == 0 ? bounceInputAX : i == 1 ? bounceInputBX : bounceInputCX;
 			InputField[] tempInputFieldY = i == 0 ? bounceInputAY : i == 1 ? bounceInputBY : bounceInputCY;
 			Vector2[] tempDefaultValue = i == 0 ? bounceInputDefaultValueA : i == 1 ? bounceInputDefaultValueB : bounceInputDefaultValueC;
-
+			NewBounceObject tempObject = bounceObjects[i];
+			print(tempObject.gameObject.name);
 			for(int j = 0;j<totalBounceInput;j++){
 //				print("i = "+i+", j = "+j);
 				string tempPrefKey = GetPrefKeyID(i,j,AXIS.X);
 //				print(tempPrefKey);
 				tempInputFieldX[j].text = PlayerPrefs.GetFloat(tempPrefKey,tempDefaultValue[j].x).ToString();
+				tempObject.BounceVelocity[j].x = PlayerPrefs.GetFloat(tempPrefKey,tempDefaultValue[j].x);
 
 				tempPrefKey = GetPrefKeyID(i,j,AXIS.Y);
 //				print(tempPrefKey);
 				tempInputFieldY[j].text = PlayerPrefs.GetFloat(tempPrefKey,tempDefaultValue[j].y).ToString();
+				tempObject.BounceVelocity[j].y = PlayerPrefs.GetFloat(tempPrefKey,tempDefaultValue[j].y);
 			}
 		}
 	}
