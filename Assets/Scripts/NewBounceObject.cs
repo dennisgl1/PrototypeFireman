@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class NewBounceObject : MonoBehaviour {
+	public delegate void Destroy(GameObject obj);
+	public event Destroy OnDestroy;
+
 	public Collider2D thisCollider;
 	public Rigidbody2D thisRigidbody;
 
@@ -33,10 +36,12 @@ public class NewBounceObject : MonoBehaviour {
 	}
 	void Finish()
 	{
+		if(OnDestroy != null) OnDestroy(gameObject);
 		Destroy(gameObject);
 	}
 	void Fall()
 	{
+		if(OnDestroy != null) OnDestroy(gameObject);
 		Destroy(gameObject);
 	}
 }
