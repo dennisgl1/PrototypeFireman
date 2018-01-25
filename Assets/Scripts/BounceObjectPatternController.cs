@@ -7,10 +7,14 @@ public enum DIFFICULTY{
 	Easy, Medium, Hard
 }
 
+public enum OBJECT_TYPE{
+	A,B,C
+}
+
 [System.Serializable]
 public struct ObjectItem{
 	public float delay;
-	public GameObject bounceObject;
+	public OBJECT_TYPE objectType;
 }
 
 [System.Serializable]
@@ -20,14 +24,19 @@ public struct ObjectPattern{
 }
 
 public class BounceObjectPatternController : MonoBehaviour {
-
 	public Transform bounceObjectParent;
 	public bool flagIsInstantiating = false;
 
+	public GameObject[] PrefabBounceObjects;
+
 	public Button[] buttonsToDisable;
+
+
 
 	[Header("Patterns")]
 	public ObjectPattern[] objectPatterns;
+
+	public List<GameObject> currentActiveObjects;
 
 	public void ButtoninstantiatePatternOnClick(int index)
 	{
@@ -45,12 +54,23 @@ public class BounceObjectPatternController : MonoBehaviour {
 		foreach(Button b in buttonsToDisable) b.interactable = true;
 	}
 
+	void RemoveObject(GameObject obj)
+	{
+		currentActiveObjects.Remove(obj);
+		if(flagIsInstantiating && currentActiveObjects.Count <= 0){
+			flagIsInstantiating = false;
+			EnableButtons();
+		}
+	}
+
 	IEnumerator InstantiatingPattern(ObjectPattern pattern)
 	{
 		flagIsInstantiating = true;
 		for(int i = 0;i<pattern.objectItems.Length;i++){
 			yield return new WaitForSeconds(pattern.objectItems[i].delay);
-			Instantiate(pattern.objectItems[i].bounceObject,bounceObjectParent);
+			GameObject tempObj = (GameObject) Instantiate(PrefabBounceObjects[(int)pattern.objectItems[i].objectType],bounceObjectParent);
+			tempObj.GetComponent<NewBounceObject>().OnDestroy += RemoveObject;
+			currentActiveObjects.Add(tempObj);
 		}
 	}
 }
