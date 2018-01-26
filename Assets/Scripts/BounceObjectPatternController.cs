@@ -26,12 +26,13 @@ public struct ObjectPattern{
 public class BounceObjectPatternController : MonoBehaviour {
 	public Transform bounceObjectParent;
 	public bool flagIsInstantiating = false;
+	public bool flagContinuous = false;
 
 	public GameObject[] PrefabBounceObjects;
 
 	public Button[] buttonsToDisable;
-
-
+	public Button buttonStartContinuousInstantiate;
+	public Button buttonStopContinuousInstantiate;
 
 	[Header("Patterns")]
 	public ObjectPattern[] objectPatterns;
@@ -44,9 +45,39 @@ public class BounceObjectPatternController : MonoBehaviour {
 		foreach(Button b in buttonsToDisable) b.interactable = false;
 	}
 
+	public void ButtonStartContinuousInstantiateOnClick()
+	{
+		flagContinuous = true;
+		foreach(Button b in buttonsToDisable) b.interactable = false;
+		InstantiateRandomPattern();
+		buttonStartContinuousInstantiate.gameObject.SetActive(false);
+		buttonStopContinuousInstantiate.gameObject.SetActive(true);
+	}
+
+	public void ButtonStopContinuousInstantiateOnClick()
+	{
+		StopAllCoroutines();
+
+		foreach(GameObject g in currentActiveObjects) Destroy(g);
+		
+		flagContinuous = false;
+		flagIsInstantiating = false;
+
+		EnableButtons();
+		buttonStopContinuousInstantiate.gameObject.SetActive(false);
+		buttonStartContinuousInstantiate.gameObject.SetActive(true);
+		currentActiveObjects.Clear();
+	}
+
 	public void InstantiatePattern(ObjectPattern pattern)
 	{
 		StartCoroutine(InstantiatingPattern(pattern));
+	}
+
+	void InstantiateRandomPattern()
+	{
+		int rnd = Random.Range(0,objectPatterns.Length);
+		StartCoroutine(InstantiatingPattern(objectPatterns[rnd]));
 	}
 
 	public void EnableButtons()
@@ -59,7 +90,12 @@ public class BounceObjectPatternController : MonoBehaviour {
 		currentActiveObjects.Remove(obj);
 		if(flagIsInstantiating && currentActiveObjects.Count <= 0){
 			flagIsInstantiating = false;
-			EnableButtons();
+
+			if(flagContinuous){
+				InstantiateRandomPattern();
+			}else{
+				EnableButtons();
+			}
 		}
 	}
 
