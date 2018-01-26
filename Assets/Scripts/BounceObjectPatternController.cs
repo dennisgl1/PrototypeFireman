@@ -34,6 +34,8 @@ public class BounceObjectPatternController : MonoBehaviour {
 	public Button buttonStartContinuousInstantiate;
 	public Button buttonStopContinuousInstantiate;
 
+	public Toggle toggleCustomBounce;
+
 	[Header("Patterns")]
 	public ObjectPattern[] objectPatterns;
 
@@ -41,6 +43,9 @@ public class BounceObjectPatternController : MonoBehaviour {
 
 	public void ButtoninstantiatePatternOnClick(int index)
 	{
+//		foreach(GameObject nbo in PrefabBounceObjects){
+//			nbo.GetComponent<NewBounceObject>().flagIsCustomBounce = false;
+//		}
 		InstantiatePattern(objectPatterns[index]);
 		foreach(Button b in buttonsToDisable) b.interactable = false;
 		buttonStartContinuousInstantiate.gameObject.SetActive(false);
@@ -48,6 +53,9 @@ public class BounceObjectPatternController : MonoBehaviour {
 
 	public void ButtonStartContinuousInstantiateOnClick()
 	{
+		foreach(GameObject nbo in PrefabBounceObjects){
+			nbo.GetComponent<NewBounceObject>().flagIsCustomBounce = false;
+		}
 		flagContinuous = true;
 		foreach(Button b in buttonsToDisable) b.interactable = false;
 		InstantiateRandomPattern();
@@ -85,6 +93,10 @@ public class BounceObjectPatternController : MonoBehaviour {
 	{
 		foreach(Button b in buttonsToDisable) b.interactable = true;
 		buttonStartContinuousInstantiate.gameObject.SetActive(true);
+
+//		foreach(GameObject nbo in PrefabBounceObjects){
+//			nbo.GetComponent<NewBounceObject>().flagIsCustomBounce = toggleCustomBounce.isOn;
+//		}
 	}
 
 	void RemoveObject(GameObject obj)

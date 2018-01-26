@@ -50,6 +50,12 @@ public class PanelSettings : MonoBehaviour {
 		}
 		LoadInputData();
 	}
+
+	public void ToggleCustomBounce(bool flag){
+		foreach (NewBounceObject nbo in bounceObjects){
+			nbo.flagIsCustomBounce = flag;
+		}
+	}
 	#endregion
 
 	#region init
