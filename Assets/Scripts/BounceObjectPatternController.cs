@@ -43,6 +43,7 @@ public class BounceObjectPatternController : MonoBehaviour {
 	{
 		InstantiatePattern(objectPatterns[index]);
 		foreach(Button b in buttonsToDisable) b.interactable = false;
+		buttonStartContinuousInstantiate.gameObject.SetActive(false);
 	}
 
 	public void ButtonStartContinuousInstantiateOnClick()
@@ -83,6 +84,7 @@ public class BounceObjectPatternController : MonoBehaviour {
 	public void EnableButtons()
 	{
 		foreach(Button b in buttonsToDisable) b.interactable = true;
+		buttonStartContinuousInstantiate.gameObject.SetActive(true);
 	}
 
 	void RemoveObject(GameObject obj)
